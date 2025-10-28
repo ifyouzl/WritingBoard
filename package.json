@@ -1,0 +1,75 @@
+{
+  "name": "writingboard",
+  "version": "1.0.0",
+  "description": "一款Windows桌面小组件应用，用于管理待办事项和便笺",
+  "main": "dist/main.js",
+  "scripts": {
+    "start": "concurrently \"npm run start:renderer\" \"npm run start:electron\"",
+    "start:renderer": "webpack serve --config webpack.renderer.config.js",
+    "start:electron": "npm run build:main && wait-on http://localhost:3000 && cross-env NODE_ENV=development electron .",
+    "build": "npm run build:renderer && npm run build:main",
+    "build:renderer": "webpack --config webpack.renderer.config.js --mode production",
+    "build:main": "tsc -p tsconfig.main.json && tsc -p tsconfig.preload.json",
+    "package": "npm run build && electron-builder"
+  },
+  "keywords": [
+    "electron",
+    "desktop",
+    "widget",
+    "todo",
+    "notes"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "concurrently": "^8.2.0",
+    "cross-env": "^7.0.3",
+    "css-loader": "^6.8.1",
+    "electron": "^27.0.0",
+    "electron-builder": "^24.6.4",
+    "html-webpack-plugin": "^5.5.3",
+    "style-loader": "^3.3.3",
+    "ts-loader": "^9.4.4",
+    "typescript": "^5.1.6",
+    "wait-on": "^7.0.1",
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "build": {
+    "appId": "com.writingboard.app",
+    "productName": "WritingBoard",
+    "directories": {
+      "output": "D:\\WritingBoard\\Release",
+      "buildResources": "assets"
+    },
+    "files": [
+      "dist/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "WritingBoard"
+    },
+    "portable": {
+      "artifactName": "WritingBoard-Portable.exe"
+    }
+  }
+}

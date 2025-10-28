@@ -1,0 +1,90 @@
+.quick-note {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.quick-note-header {
+  margin-bottom: 16px;
+  color: white;
+}
+
+.quick-note-header h2 {
+  margin: 0 0 8px 0;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.quick-note-tip {
+  font-size: 14px;
+  opacity: 0.9;
+  font-style: italic;
+}
+
+.quick-note-textarea {
+  flex: 1;
+  padding: 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  resize: none;
+  background: white;
+  color: #333;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.quick-note-textarea:focus {
+  outline: none;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
+}
+
+.quick-note-textarea::placeholder {
+  color: #999;
+  opacity: 0.6;
+}
+
+.quick-note-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+  padding: 0 4px;
+  color: white;
+  font-size: 13px;
+}
+
+.char-count {
+  opacity: 0.8;
+}
+
+.auto-save-tip {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  opacity: 0.9;
+  font-weight: 500;
+}
+
+/* 响应式设计 */
+@media (max-width: 400px) {
+  .quick-note {
+    padding: 12px;
+  }
+
+  .quick-note-header h2 {
+    font-size: 20px;
+  }
+
+  .quick-note-textarea {
+    font-size: 14px;
+    padding: 12px;
+  }
+}
+
