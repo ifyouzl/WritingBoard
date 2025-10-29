@@ -105,11 +105,18 @@ function createWindow() {
     transparent: false,
     alwaysOnTop: true,
     resizable: true,
+    show: false, // 先不显示，等页面加载完成
+    title: 'WritingBoard - 笔记与待办', // 设置主窗口标题
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
       preload: path.join(__dirname, 'preload.js')
     }
+  });
+
+  // 页面加载完成后再显示窗口，避免空白
+  mainWindow.once('ready-to-show', () => {
+    mainWindow?.show();
   });
 
   // 开发环境加载本地服务器
@@ -131,11 +138,15 @@ function createWindow() {
 
 // 创建桌面小组件窗口
 function createWidgetWindow() {
-  if (widgetWindow) {
+  // 如果窗口已存在且未销毁，直接显示
+  if (widgetWindow && !widgetWindow.isDestroyed()) {
     widgetWindow.show();
     widgetWindow.focus();
     return;
   }
+
+  // 重置为 null，重新创建
+  widgetWindow = null;
 
   const primaryDisplay = screen.getPrimaryDisplay();
   const { width, height } = primaryDisplay.workAreaSize;
@@ -143,14 +154,17 @@ function createWidgetWindow() {
   widgetWindow = new BrowserWindow({
     width: 280,
     height: 400,
-    x: width - 300, // 距离屏幕右侧20px
-    y: height - 420, // 距离屏幕底部20px
+    x: width - 300,
+    y: height - 420,
     frame: false,
     transparent: true,
-    alwaysOnTop: true,
-    skipTaskbar: true,
+    alwaysOnTop: false,  // 改为 false，允许其他窗口覆盖
+    skipTaskbar: false,  // 改为 false，在任务栏显示图标
     resizable: false,
-    show: false, // 先不显示，加载完成后再显示
+    show: false,
+    title: 'WritingBoard - 桌面小组件',
+    backgroundColor: '#00000000',
+    hasShadow: false,
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
@@ -262,13 +276,11 @@ ipcMain.handle('toggle-widget', async (event, show: boolean) => {
         }, 200);
       }
       
-      // 延迟一点再隐藏主窗口，避免闪烁
-      setTimeout(() => {
-        if (mainWindow && !mainWindow.isDestroyed()) {
-          mainWindow.hide();
-          console.log('主窗口已隐藏，小组件已显示');
-        }
-      }, 100);
+      // 隐藏主窗口
+      if (mainWindow && !mainWindow.isDestroyed()) {
+        mainWindow.hide();
+        console.log('主窗口已隐藏，小组件已显示');
+      }
     } else {
       // 先显示主窗口
       if (mainWindow && !mainWindow.isDestroyed()) {
@@ -276,12 +288,10 @@ ipcMain.handle('toggle-widget', async (event, show: boolean) => {
         mainWindow.focus();
       }
       // 再关闭小组件
-      setTimeout(() => {
-        if (widgetWindow && !widgetWindow.isDestroyed()) {
-          widgetWindow.close();
-          widgetWindow = null;
-        }
-      }, 50);
+      if (widgetWindow && !widgetWindow.isDestroyed()) {
+        widgetWindow.close();
+        widgetWindow = null;
+      }
     }
     return { success: true };
   } catch (error) {

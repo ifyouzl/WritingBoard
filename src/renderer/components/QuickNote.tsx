@@ -30,3 +30,4 @@ const QuickNote: React.FC<QuickNoteProps> = ({ text, onChange }) => {
 
 export default QuickNote;
 
+
